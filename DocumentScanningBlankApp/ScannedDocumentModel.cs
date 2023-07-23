@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DocumentScanningBlankApp;
 
 using iText.Kernel.Pdf;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 public class ScannedDocumentModel
 {
-    public ScannedDocumentModel(FileInfo file,bool isParent)
+    public ScannedDocumentModel(FileInfo file, bool isParent)
     {
+        var document = new PdfDocument(new PdfReader(file.FullName));
         FileName = file.Name;
         FileSize = file.Length;
         ScannedDate = file.CreationTime;
@@ -18,8 +20,14 @@ public class ScannedDocumentModel
         IsParent = isParent;
         FileDirectory = file.DirectoryName;
         ExtensionlessFileName = Path.GetFileNameWithoutExtension(file.FullName);
-        PageCount = new PdfDocument(new PdfReader(file.FullName)).GetNumberOfPages();
+        PageCount = document.GetNumberOfPages();
         FullPath = file.FullName;
+    }
+    private int _pageCount;
+    private double _fileSize;
+    public bool IsParent
+    {
+        get; set;
     }
 
     public string FullPath
@@ -33,8 +41,10 @@ public class ScannedDocumentModel
 
     public int PageCount
     {
-        get; set;
+        get => this.IsParent ? Children.Select(child => child._pageCount).Sum() + this._pageCount : this._pageCount;
+        set => this._pageCount = value;
     }
+
     public string ExtensionlessFileName
     {
         get; set;
@@ -46,8 +56,10 @@ public class ScannedDocumentModel
     }
     public double FileSize
     {
-        get; set;
+        get => this.IsParent ? Children.Select(child => child._fileSize).Sum() + this._fileSize : this._fileSize;
+        set => this._fileSize = value * 0.000001;
     }
+
     public DateTime ScannedDate
     {
         get; set;
@@ -65,10 +77,7 @@ public class ScannedDocumentModel
         get; set;
     }
 
-    public bool IsParent
-    {
-        get; set;
-    }
+
 
     public ICollection<ScannedDocumentModel> Children
     {

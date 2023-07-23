@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace DocumentScanningBlankApp
 {
-    using System.Collections.Specialized;
-
     using DocumentScanningBlankApp.Data;
-
+    using DocumentScanningBlankApp.Events;
     using Microsoft.UI.Xaml;
+    using System.Collections.Specialized;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -69,7 +68,7 @@ namespace DocumentScanningBlankApp
                 _parentFileName = userInput;
                 var newPathName = Path.Combine(Path.GetDirectoryName(e.FullPath), _parentFileName + ".pdf");
                 File.Move(e.FullPath, newPathName);
-                _parentNode = new ScannedDocumentModel(new FileInfo(newPathName),true);
+                _parentNode = new ScannedDocumentModel(new FileInfo(newPathName), true);
                 if (_rootNodes is null)
                 {
                     _rootNodes = new ObservableCollection<ScannedDocumentModel>();
@@ -86,10 +85,10 @@ namespace DocumentScanningBlankApp
                 DispatcherQueue.TryEnqueue(
                     async () =>
                         {
-                    var child = new FileInfo(newFileName);
-                        _parentNode.FileSize += child.Length;
-                        _parentNode.Children.Add(new ScannedDocumentModel(child, false));
-                    });
+                            var child = new FileInfo(newFileName);
+                            _parentNode.FileSize += child.Length;
+                            _parentNode.Children.Add(new ScannedDocumentModel(child, false));
+                        });
 
 
                 _childCount++;
@@ -98,9 +97,9 @@ namespace DocumentScanningBlankApp
 
         private async Task<bool> PromptKeepFileAsync()
         {
-           
+
             var taskCompletionSource = new TaskCompletionSource<bool>();
-            
+
             DispatcherQueue.TryEnqueue(
                 async () =>
                     {
@@ -116,7 +115,7 @@ namespace DocumentScanningBlankApp
                         var result = results == ContentDialogResult.Primary;
                         taskCompletionSource.SetResult(result);
                     });
-            
+
 
             return await taskCompletionSource.Task;
         }
@@ -131,19 +130,19 @@ namespace DocumentScanningBlankApp
             DispatcherQueue.TryEnqueue(
                 async () =>
                     {
-                    var dialog = new ContentDialog
-            {
-                XamlRoot = this.XamlRoot,
-                Title = "File Action",
-                Content = "Is this a new document?",
-                PrimaryButtonText = "Yes",
-                SecondaryButtonText = "No"
-            };
+                        var dialog = new ContentDialog
+                        {
+                            XamlRoot = this.XamlRoot,
+                            Title = "File Action",
+                            Content = "Is this a new document?",
+                            PrimaryButtonText = "Yes",
+                            SecondaryButtonText = "No"
+                        };
 
-                    var results = await dialog.ShowAsync();
+                        var results = await dialog.ShowAsync();
 
-                    var result = results == ContentDialogResult.Primary;
-                    taskCompletionSource.SetResult(result);
+                        var result = results == ContentDialogResult.Primary;
+                        taskCompletionSource.SetResult(result);
                     });
 
 
@@ -158,13 +157,13 @@ namespace DocumentScanningBlankApp
                 async () =>
                     {
                         var dialog = new ContentDialog
-                                         {
-                                             XamlRoot = this.XamlRoot,
-                                             Title = "Name Input",
-                                             Content = new TextBox(),
-                                             PrimaryButtonText = "OK",
-                                             CloseButtonText = "Cancel"
-                                         };
+                        {
+                            XamlRoot = this.XamlRoot,
+                            Title = "Name Input",
+                            Content = new TextBox(),
+                            PrimaryButtonText = "OK",
+                            CloseButtonText = "Cancel"
+                        };
 
                         var result = await dialog.ShowAsync();
                         if (result == ContentDialogResult.Primary)
@@ -173,7 +172,7 @@ namespace DocumentScanningBlankApp
                             taskCompletionSource.SetResult(textBox?.Text);
                         }
                     });
-                return await taskCompletionSource.Task;
+            return await taskCompletionSource.Task;
         }
 
         private async void MergeButton_OnClick(object sender, RoutedEventArgs e)
@@ -181,20 +180,20 @@ namespace DocumentScanningBlankApp
             DispatcherQueue.TryEnqueue(async () =>
                 {
                     ContentDialog mergeFileDialog = new ContentDialog
-                                                        {
-                                                            XamlRoot = this.XamlRoot,
-                                                            Title = "Merge File?",
-                                                            Content = "Are you sure you want to merge these files?",
-                                                            PrimaryButtonText = "Merge",
-                                                            CloseButtonText = "Cancel"
-                                                        };
+                    {
+                        XamlRoot = this.XamlRoot,
+                        Title = "Merge File?",
+                        Content = "Are you sure you want to merge these files?",
+                        PrimaryButtonText = "Merge",
+                        CloseButtonText = "Cancel"
+                    };
 
                     var result = await mergeFileDialog.ShowAsync();
 
 
                     if (result == ContentDialogResult.Primary)
                     {
-                        // Delete the file.
+                        MergeFilesTask.MergeFiles(_parentNode);
                     }
                     else
                     {

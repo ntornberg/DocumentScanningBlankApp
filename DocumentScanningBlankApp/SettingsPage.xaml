@@ -11,8 +11,35 @@
     <Grid Padding="12">
         <StackPanel>
             <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,12" />
-           
-            <!-- Add more settings as needed -->
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBox x:Name="PickScannedOutputTextBlock" Header="Scanned documents output directory:" PlaceholderText="Directory path" Width="500" HorizontalAlignment="Left"  Margin="0,0,0,20" LostFocus="DirectoryInput_OnLostFocus" TextChanged="OutputDirectory_OnTextChanged"/>
+                <Button x:Name="PickScannedOutputButton" Content="Open in folder"
+                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
+                
+                <TeachingTip x:Name="ToggleScannedOutputTeachingTip"
+                             Target="{x:Bind PickScannedOutputTextBlock}"
+                             Title="Invalid Folder Path"
+                             Subtitle="Ensure this path points to an existing folder.">
+                    <TeachingTip.IconSource>
+                        <SymbolIconSource Symbol="Refresh" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBox x:Name="PickMergeOutputTextBlock" Header="Merged files output directory:" PlaceholderText="Directory path" Width="500" Margin="0,0,0,20" HorizontalAlignment="Left" TextChanged="MergedDirectory_OnTextChanged" LostFocus="DirectoryInput_OnLostFocus"/>
+                <Button x:Name="PickMergeOutputButton" Content="Open in folder"
+                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
+
+                <TeachingTip x:Name="ToggleMergeOutputTeachingTip"
+                             Target="{x:Bind PickMergeOutputTextBlock}"
+                             Title="Invalid Folder Path"
+                             Subtitle="Ensure this path points to an existing folder.">
+                    <TeachingTip.IconSource>
+                        <SymbolIconSource Symbol="Refresh" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
+        <!-- Add more settings as needed -->
         </StackPanel>
     </Grid>
 </Page>
