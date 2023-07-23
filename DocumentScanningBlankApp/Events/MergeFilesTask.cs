@@ -13,12 +13,11 @@ public class MergeFilesTask
         foreach (var oldDocument in file.Children)
         {
             var fileInfo = new FileInfo(oldDocument.FullPath);
-
-            using (var pdfDoc = new PdfDocument(new PdfReader(oldDocument.FullPath)))
-            {
+            var pdfDoc = new PdfDocument(new PdfReader(oldDocument.FullPath));
+            
                 pdfDoc.CopyPagesTo(1, pdfDoc.GetNumberOfPages(), mergedPdf);
                 pdfDoc.Close();
-            }
+            
 
 
 
