@@ -2,7 +2,11 @@
 
 namespace DocumentScanningBlankApp.Data;
 
+using System.IO;
+
+using DocumentScanningBlankApp.StupidHacks;
+
 public class ScannedFileData
 {
-    public static ObservableCollection<ScannedDocumentModel> RootNodes { get; set; }
+    public static AddOnlyObservableCollection<FileInfo> IncomingFiles { get; set; }
 }

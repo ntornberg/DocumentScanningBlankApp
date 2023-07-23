@@ -10,7 +10,6 @@ namespace DocumentScanningBlankApp
     using Microsoft.UI.Xaml.Media;
     using System;
     using System.IO;
-    using System.Threading.Tasks;
     using Windows.Storage;
     using Windows.Storage.AccessCache;
     using Windows.Storage.Pickers;
@@ -59,8 +58,8 @@ namespace DocumentScanningBlankApp
 
                             await taskCompletionSource.Task;
                         });*/
-        
-    }
+
+        }
 
 
         private void OutputDirectory_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -80,7 +79,7 @@ namespace DocumentScanningBlankApp
 
             if (string.IsNullOrEmpty(textBox.Text) || !Directory.Exists(textBox.Text))
             {
-                
+
                 textBox.BorderBrush = new SolidColorBrush(Colors.Red);
                 switch (textBox.Name)
                 {
@@ -91,7 +90,7 @@ namespace DocumentScanningBlankApp
                         this.ToggleMergeOutputTeachingTip.IsOpen = true;
                         break;
                 }
-                
+
             }
             else
             {
@@ -121,13 +120,13 @@ namespace DocumentScanningBlankApp
             // Retrieve the window handle (HWND) of the current WinUI 3 window.
             var window = App.m_window;
             var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-           
+
             WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
 
             // Set options for your folder picker
             openPicker.SuggestedStartLocation = PickerLocationId.Desktop;
             openPicker.FileTypeFilter.Add("*");
-            
+
             // Open the picker for the user to pick a folder
             StorageFolder folder = await openPicker.PickSingleFolderAsync();
 

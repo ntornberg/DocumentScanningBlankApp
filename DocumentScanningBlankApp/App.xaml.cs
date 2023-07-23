@@ -1,11 +1,12 @@
-﻿using DocumentScanningBlankApp.Helpers;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace DocumentScanningBlankApp
 {
+    using DocumentScanningBlankApp.Events;
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -15,20 +16,15 @@ namespace DocumentScanningBlankApp
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        private static Window startupWindow;
-
-       
+        private static DocumentScannedEvent _documentScannedEvent;
 
         public static Window m_window;
 
         public App()
         {
             this.InitializeComponent();
-
+            _documentScannedEvent = new DocumentScannedEvent();
         }
-
-
-
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
@@ -37,13 +33,7 @@ namespace DocumentScanningBlankApp
         {
             m_window = new MainWindow();
             m_window.Activate();
-            
-           
-            
+
         }
-
-
-       
-
     }
 }
