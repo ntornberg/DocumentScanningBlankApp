@@ -1,43 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Application
+    RequestedTheme="Dark"
     x:Class="DocumentScanningBlankApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:DocumentScanningBlankApp"
     xmlns:ui="using:Windows.UI"
-    RequestedTheme="Dark">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                
-        <ResourceDictionary>
-           
-                    <ui:Color x:Key="PrimaryColor">#0082c8</ui:Color> <!-- turquoise -->
-            <ui:Color x:Key="SecondaryColor">#ffffff</ui:Color> <!-- white -->
-            <ui:Color x:Key="AccentColor">#ff7f50</ui:Color> <!-- coral -->
-            <ui:Color x:Key="SemiTransparentWhite">#80FFFFFF</ui:Color>
-            <ui:Color x:Key="DarkPrimary">#FF002633</ui:Color>
-            <ui:Color x:Key="DarkSecondary">#FF004d99</ui:Color>
-            <ui:Color x:Key="DarkBackground">#FF000819</ui:Color>
-            <ui:Color x:Key="TextColor">#FFe0ffff</ui:Color>
-            <SolidColorBrush x:Key="DarkPrimaryBrush" Color="{StaticResource DarkPrimary}" />
-            <SolidColorBrush x:Key="DarkSecondaryBrush" Color="{StaticResource DarkSecondary}" />
-            <SolidColorBrush x:Key="DarkBackgroundBrush" Color="{StaticResource DarkBackground}" />
-            <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
-                    <SolidColorBrush x:Key="SemiTransparentWhiteBrush" Color="{StaticResource SemiTransparentWhite}" />
-                    <!-- Light theme resources -->
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="BackgroundColor" Color="{StaticResource PrimaryColor}" />
-                    <SolidColorBrush x:Key="PrimaryTextColor" Color="{StaticResource SecondaryColor}" />
-                    <SolidColorBrush x:Key="AccentTextColor" Color="{StaticResource AccentColor}" />
+
+                <ResourceDictionary>
+
+                    <ui:Color x:Key="PrimaryColor">#0082c8</ui:Color>
+                    <!--  turquoise  -->
+                    <ui:Color x:Key="SecondaryColor">#ffffff</ui:Color>
+                    <!--  white  -->
+                    <ui:Color x:Key="AccentColor">#ff7f50</ui:Color>
+                    <!--  coral  -->
+                    <ui:Color x:Key="SemiTransparentWhite">#80FFFFFF</ui:Color>
+                    <ui:Color x:Key="DarkPrimary">#FF002633</ui:Color>
+                    <ui:Color x:Key="DarkSecondary">#FF004d99</ui:Color>
+                    <ui:Color x:Key="DarkBackground">#FF000819</ui:Color>
+                    <ui:Color x:Key="TextColor">#FFe0ffff</ui:Color>
+                    <SolidColorBrush Color="{StaticResource DarkPrimary}" x:Key="DarkPrimaryBrush" />
+                    <SolidColorBrush Color="{StaticResource DarkSecondary}" x:Key="DarkSecondaryBrush" />
+                    <SolidColorBrush Color="{StaticResource DarkBackground}" x:Key="DarkBackgroundBrush" />
+                    <SolidColorBrush Color="{StaticResource TextColor}" x:Key="TextBrush" />
+                    <SolidColorBrush Color="{StaticResource SemiTransparentWhite}" x:Key="SemiTransparentWhiteBrush" />
+                    <!--  Light theme resources  -->
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush Color="{StaticResource PrimaryColor}" x:Key="BackgroundColor" />
+                            <SolidColorBrush Color="{StaticResource SecondaryColor}" x:Key="PrimaryTextColor" />
+                            <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AccentTextColor" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
-  
+
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+            <!--  Other app resources here  -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
