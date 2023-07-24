@@ -1,10 +1,8 @@
 ﻿namespace DocumentScanningBlankApp.Events;
 
 using DocumentScanningBlankApp.Data;
-using System.Collections.ObjectModel;
-using System.IO;
-
 using DocumentScanningBlankApp.StupidHacks;
+using System.IO;
 
 public class DocumentScannedEvent
 {

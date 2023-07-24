@@ -12,15 +12,27 @@ namespace DocumentScanningBlankApp
 {
     using DocumentScanningBlankApp.Data;
     using DocumentScanningBlankApp.Events;
+    using DocumentScanningBlankApp.StupidHacks;
+    using iText.Kernel.Pdf;
+    using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Navigation;
     using System.Collections.Specialized;
+    using System.Drawing;
+    using PdfImageViewer = Windows.Data.Pdf;
+    using System.Drawing.Imaging;
 
-    using Windows.UI.Core;
+    using Windows.Storage;
 
-    using DocumentScanningBlankApp.StupidHacks;
+    using ABI.Microsoft.UI.Xaml.Media.Imaging;
 
-    using Microsoft.UI.Dispatching;
+    using Microsoft.UI.Xaml.Media;
+
+    using Image = Microsoft.UI.Xaml.Controls.Image;
+    using Windows.Storage.Streams;
+    using Windows.Graphics.Imaging;
+
+    using ABI.Microsoft.UI.Text;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -40,7 +52,7 @@ namespace DocumentScanningBlankApp
             this.DataContext = this;
             this.treeView.ItemsSource = _rootNodes;
             this.Loaded += FileProcessingPage_Loaded;
-            
+
             ScannedFileData.IncomingFiles.CollectionChanged += this.IncomingFiles_CollectionChanged;
             /*var watcher = new FileSystemWatcher();
             watcher.IncludeSubdirectories = true;
@@ -49,7 +61,7 @@ namespace DocumentScanningBlankApp
             watcher.Created += OnFileCreated;
             watcher.Changed += OnFileCreated;
             watcher.EnableRaisingEvents = true;*/
-            
+
         }
 
         private void FileProcessingPage_Loaded(object sender, RoutedEventArgs e)
@@ -67,7 +79,7 @@ namespace DocumentScanningBlankApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
+
         }
 
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -81,13 +93,13 @@ namespace DocumentScanningBlankApp
             {
                 this.OnFileCreated(file);
             }
-            
+
         }
 
         private async Task OnFileCreated(FileInfo file)
         {
 
-            if (!await this.PromptKeepFileAsync())
+            if (!await this.PromptKeepFileAsync(file))
             {
                 return;
             }
@@ -126,44 +138,72 @@ namespace DocumentScanningBlankApp
             }
         }
 
-        private async Task<bool> PromptKeepFileAsync()
+        private async Task<bool> PromptKeepFileAsync(FileInfo fileInfo)
         {
 
             var taskCompletionSource = new TaskCompletionSource<bool>();
-           
-                DispatcherQueue.TryEnqueue(
+
+            DispatcherQueue.TryEnqueue(
                     async () =>
                         {
-                    var dialog = new ContentDialog();
-                        dialog.XamlRoot = XamlRoot;
-                        dialog.Title = "File Action";
-                        dialog.Content = "A new file has been created. Do you want to keep it?";
-                        dialog.PrimaryButtonText = "Yes";
-                        dialog.SecondaryButtonText = "No";
+                            Image imageControl = new Image();
+                            StorageFile pdfFile = await StorageFile.GetFileFromPathAsync(fileInfo.FullName);
+                            PdfImageViewer.PdfDocument pdfDocument =
+                                await PdfImageViewer.PdfDocument.LoadFromFileAsync(pdfFile);
 
-                        var results = await dialog.ShowAsync();
+                            var pageIndex = 0;
+                            var pdfPage = pdfDocument.GetPage((uint)pageIndex);
 
-                        var result = results == ContentDialogResult.Primary;
-                        taskCompletionSource.SetResult(result);
-                    });
+                            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                            {
+                                await pdfPage.RenderToStreamAsync(stream);
+                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                                var bitmapSource = new Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource();
+
+                                if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8
+                                    || softwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
+                                {
+                                    softwareBitmap = SoftwareBitmap.Convert(
+                                        softwareBitmap,
+                                        BitmapPixelFormat.Bgra8,
+                                        BitmapAlphaMode.Premultiplied);
+                                }
+
+                                await bitmapSource.SetBitmapAsync(softwareBitmap);
+
+                                imageControl.Source = bitmapSource;
+                            }
+
+                            var messageText = new TextBlock()
+                                                  {
+                                                      Text = $"A new file has been created. Do you want to keep it?\n\n"
+                                                             + $"File Size: {fileInfo.Length * 0.000001} MB\n"
+                                                             + $"Page Count: {new PdfDocument(new PdfReader(fileInfo.FullName)).GetNumberOfPages()}\n",
+                                                  };
+                            StackPanel stackPanel = new StackPanel();
+                            stackPanel.Children.Add(messageText);
+                            stackPanel.Children.Add(imageControl);
+                            
+                            var dialog = new ContentDialog();
+                            dialog.XamlRoot = XamlRoot;
+                            dialog.Title = "File Action";
+                            dialog.Content = stackPanel;
+                            dialog.PrimaryButtonText = "Yes";
+                            dialog.SecondaryButtonText = "No";
+
+                            var results = await dialog.ShowAsync();
+
+                            var result = results == ContentDialogResult.Primary;
+                            taskCompletionSource.SetResult(result);
+                        });
 
 
-            return await taskCompletionSource.Task;
-            /*var dialog = new ContentDialog
-                             {
-                                 Title = "File Action",
-                                 Content = "A new file has been created. Do you want to keep it?",
-                                 PrimaryButtonText = "Yes",
-                                 SecondaryButtonText = "No"
-                             };
+                return await taskCompletionSource.Task;
+            
+            }
+        
 
-            // Attach dialog to the appropriate XAML root
-            dialog.XamlRoot = this.XamlRoot;
-
-            var results = await dialog.ShowAsync();
-            return results == ContentDialogResult.Primary;*/
-        }
-    
 
 
 

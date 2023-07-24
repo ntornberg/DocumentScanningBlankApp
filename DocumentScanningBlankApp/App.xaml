@@ -12,7 +12,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 
         <ResourceDictionary>
-            <ui:Color x:Key="PrimaryColor">#0082c8</ui:Color> <!-- turquoise -->
+           
+                    <ui:Color x:Key="PrimaryColor">#0082c8</ui:Color> <!-- turquoise -->
             <ui:Color x:Key="SecondaryColor">#ffffff</ui:Color> <!-- white -->
             <ui:Color x:Key="AccentColor">#ff7f50</ui:Color> <!-- coral -->
             <ui:Color x:Key="SemiTransparentWhite">#80FFFFFF</ui:Color>

@@ -17,6 +17,7 @@ namespace DocumentScanningBlankApp
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         private static DocumentScannedEvent _documentScannedEvent;
+        private static GetHistoricalDataTask _getPreviousFileData;
 
         public static Window m_window;
 
@@ -24,6 +25,7 @@ namespace DocumentScanningBlankApp
         {
             this.InitializeComponent();
             _documentScannedEvent = new DocumentScannedEvent();
+            _getPreviousFileData = new GetHistoricalDataTask();
         }
         /// <summary>
         /// Invoked when the application is launched.

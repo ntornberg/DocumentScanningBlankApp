@@ -10,8 +10,12 @@
     Background="{ThemeResource DarkBackgroundBrush}"
     Foreground="{ThemeResource TextBrush}">
     <Page.Resources>
+        <AcrylicBrush x:Key="CustomAcrylicInAppLuminosity"
+                      TintOpacity=".5" TintLuminosityOpacity="1" TintColor="{ThemeResource DarkPrimary}" FallbackColor="SkyBlue" />
         <DataTemplate x:Key="ParentTemplate" x:DataType="local:ScannedDocumentModel">
-            <TreeViewItem ItemsSource="{x:Bind Children}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15">
+           
+
+            <TreeViewItem Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" ItemsSource="{x:Bind Children}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button Click="MergeButton_OnClick" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalContentAlignment="Center">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -19,17 +23,17 @@
                         </StackPanel>
                     </Button>
 
-                    <TextBlock Width="100" Padding="0" Text="{Binding FileName}" />
+                    <TextBlock Width="100" TextWrapping="Wrap" Padding="0" Text="{Binding FileName}" />
                     <TextBlock Width="100" Padding="0" Text="{Binding FileSize}" />
                     <TextBlock Width="100" Padding="0" Text="{Binding ScannedDate}" />
                 </StackPanel>
             </TreeViewItem>
         </DataTemplate>
 
-        <DataTemplate x:Key="ChildTemplate" x:DataType="local:ScannedDocumentModel">
+        <DataTemplate x:Key="ChildTemplate" x:DataType="local:ScannedDocumentModel" >
 
-           
-                <TreeViewItem VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15">
+
+            <TreeViewItem VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
 
                     <StackPanel Orientation="Horizontal" Spacing="5">
                             
@@ -51,24 +55,25 @@
     </Page.Resources>
 
 
-    <Grid DataContext="{Binding ElementName=_rootNodes}">
+    <Grid DataContext="{Binding ElementName=_rootNodes}" >
 
         <Grid.Background>
             <ImageBrush ImageSource="Assets/ha1flosse_delphin_delfin_dolphin.png" Stretch="Uniform" Opacity="50"/>
         </Grid.Background>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Grid.Row="0" >
+        
+        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Left" Margin="10" Grid.Row="0" >
             <TextBlock Width="150" FontWeight="SemiBold" Style="{StaticResource SubtitleTextBlockStyle}" Text="File Name" Margin="20,0,0,0" />
-            <Rectangle Fill="Black" Height="30" Width="1" VerticalAlignment="Center" Margin="5,0"/>
+            
             <TextBlock Width="150" FontWeight="SemiBold" Style="{StaticResource SubtitleTextBlockStyle}" Text="File Size" />
             <TextBlock Width="150" FontWeight="SemiBold" Style="{StaticResource SubtitleTextBlockStyle}" Text="Scanned Date" />
         </StackPanel>   
-        <Rectangle Fill="Black" Grid.Row="1" Height="12"/>
+        <Rectangle Fill="Black" Grid.Row="1" Height="120"/>
         <!--<TreeView x:Name ="treeView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,10" Grid.Row="2" ItemTemplateSelector="{StaticResource NodeTemplateSelector}" >
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="local:ScannedDocumentModel">
@@ -90,7 +95,7 @@
                 </DataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>-->
-        <TreeView x:Name="treeView"  ItemTemplateSelector="{StaticResource ScannedDocumentTemplateSelector}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,10" Grid.Row="2">
+        <TreeView  x:Name="treeView"  ItemTemplateSelector="{StaticResource ScannedDocumentTemplateSelector}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,10" Grid.Row="2">
           
                   
            

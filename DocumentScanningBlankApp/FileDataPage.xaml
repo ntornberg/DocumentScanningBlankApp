@@ -7,14 +7,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:viewModels="using:DocumentScanningBlankApp.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
-        <local:FileDataPage />
+        <viewModels:ScannedFileChartViewModel />
     </Page.DataContext>
 
+    <VariableSizedWrapGrid Orientation="Vertical" MaximumRowsOrColumns="3" ItemHeight="300" ItemWidth="1000" Margin="10,10,10,10">
+        <!--<Rectangle Fill="Red"/>
+        <Rectangle Fill="Blue" Height="80" VariableSizedWrapGrid.RowSpan="2"/>
+        <Rectangle Fill="Green" Width="80" VariableSizedWrapGrid.ColumnSpan="2"/>
+        <Rectangle Fill="Yellow" Height="80" Width="80" VariableSizedWrapGrid.RowSpan="2" VariableSizedWrapGrid.ColumnSpan="2"/>-->
+        <Grid Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+            <lvc:CartesianChart ZoomMode="X" VariableSizedWrapGrid.RowSpan="2" VariableSizedWrapGrid.ColumnSpan="2" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Series="{Binding Series}">
+            </lvc:CartesianChart>
+        </Grid>
+        <VariableSizedWrapGrid.Background>
+            <ImageBrush ImageSource="Assets/ha1flosse_delphin_delfin_dolphin.png" Stretch="Uniform" Opacity="50"/>
+        </VariableSizedWrapGrid.Background>
 
-    <lvc:CartesianChart
-        Series="{Binding Series}">
-    </lvc:CartesianChart>
+
+
+    </VariableSizedWrapGrid>
+
+
 
 </Page>

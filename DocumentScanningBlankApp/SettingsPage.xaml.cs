@@ -31,7 +31,7 @@ namespace DocumentScanningBlankApp
             if (Directory.Exists(textBox.Text))
             {
                 localSettings.Values["MergedDirectory"] = textBox.Text;
-            }
+            } //TODO: Do this for all of them
 
             /*else
             {
@@ -89,6 +89,9 @@ namespace DocumentScanningBlankApp
                     case "PickMergeOutputTextBlock":
                         this.ToggleMergeOutputTeachingTip.IsOpen = true;
                         break;
+                    case "PickSortedFilesTextBlock":
+                        this.ToggleSortedFilesPathTeachingTip.IsOpen = true;
+                        break;
                 }
 
             }
@@ -110,6 +113,9 @@ namespace DocumentScanningBlankApp
                     break;
                 case "PickMergedOutputButton":
                     this.PickMergeOutputTextBlock.Text = "";
+                    break;
+                case "PickSortedFilesPathButton":
+                    this.PickSortedFilesPathTextBlock.Text = "";
                     break;
             }
 
@@ -144,6 +150,19 @@ namespace DocumentScanningBlankApp
                 case "PickMergedOutputButton":
                     this.PickMergeOutputTextBlock.Text = folder.Path;
                     break;
+                case "PickSortedFilesPathButton":
+                    this.PickSortedFilesPathTextBlock.Text = folder.Path;
+                    break;
+            }
+        }
+
+        private void PickSortedFilesPathTextBlock_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (Directory.Exists(textBox.Text))
+            {
+                localSettings.Values["SortedFilesPath"] = textBox.Text;
             }
         }
     }

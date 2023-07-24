@@ -1,16 +1,14 @@
 ﻿using System.Collections.ObjectModel;
-using System;
 using System.ComponentModel;
 
 namespace DocumentScanningBlankApp.StupidHacks;
 
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 
 public class AddOnlyObservableCollection<T> : ObservableCollection<T>
 {
-    
+
     public override event NotifyCollectionChangedEventHandler CollectionChanged;
 
     public AddOnlyObservableCollection() : base() { }
@@ -28,5 +26,5 @@ public class AddOnlyObservableCollection<T> : ObservableCollection<T>
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
     }
-    
+
 }

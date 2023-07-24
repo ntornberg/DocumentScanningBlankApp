@@ -39,7 +39,21 @@
                     </TeachingTip.IconSource>
                 </TeachingTip>
             </StackPanel>
-        <!-- Add more settings as needed -->
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBox x:Name="PickSortedFilesPathTextBlock" Header="Sorted files output directory:" PlaceholderText="Directory path" Width="500" Margin="0,0,0,20" HorizontalAlignment="Left" TextChanged="PickSortedFilesPathTextBlock_OnTextChanged" LostFocus="DirectoryInput_OnLostFocus"/>
+                <Button x:Name="PickSortedFilesPathButton" Content="Open in folder"
+                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
+
+                <TeachingTip x:Name="ToggleSortedFilesPathTeachingTip"
+                             Target="{x:Bind PickMergeOutputTextBlock}"
+                             Title="Invalid Folder Path"
+                             Subtitle="Ensure this path points to an existing folder.">
+                    <TeachingTip.IconSource>
+                        <SymbolIconSource Symbol="Refresh" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
+            <!-- Add more settings as needed -->
         </StackPanel>
     </Grid>
 </Page>

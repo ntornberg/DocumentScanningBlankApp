@@ -29,22 +29,28 @@ namespace DocumentScanningBlankApp
 
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            
+
             DispatcherQueue.TryEnqueue(
                 async () =>
                     {
                         if (contentFrame.SourcePageType != typeof(FileProcessingPage))
                         {
                             this.InfoBadgeOpacity = 1;
-                            this.FileScannedNotificationCount++;
+                            if (this.FileScannedNotification.Value == 0)
+                            {
+                                this.FileScannedNotification.Value = 1;
+                            }
+                            this.FileScannedNotification.Value++;
+                            this.FileScannedNotification.Visibility = Visibility.Visible;
                         }
                         else
                         {
                             this.InfoBadgeOpacity = 0;
                             this.FileScannedNotification.Value = 0;
+                            this.FileScannedNotification.Visibility = Visibility.Collapsed;
                         }
-                        this.FileScannedNotification.Visibility = Visibility.Visible;
-                        this.FileScannedNotification.Value = ScannedFileData.IncomingFiles.Count;
+                        /*
+                        this.FileScannedNotification.Value = ScannedFileData.IncomingFiles.Count;*/
                     });
         }
 
@@ -62,9 +68,9 @@ namespace DocumentScanningBlankApp
                             {
                                 this.InfoBadgeOpacity = 0;
                                 this.FileScannedNotification.Value = 0;
-                                                               this.FileScannedNotification.Visibility = Visibility.Collapsed;
+                                this.FileScannedNotification.Visibility = Visibility.Collapsed;
                             });
-                                break;
+                    break;
                 case "FileData":
                     this.contentFrame.Navigate(typeof(FileDataPage));
                     // Handle Menu Item2 selection
