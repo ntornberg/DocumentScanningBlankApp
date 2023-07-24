@@ -76,13 +76,14 @@ public class ScannedFileChartViewModel
                                                
                                             },
                           TextSize = 16,
-                          ZeroPaint = new SolidColorPaint(SKColors.Red)
+                          
+                          /*ZeroPaint = new SolidColorPaint(SKColors.Red)
                                           {
                                               StrokeThickness = 2,
                                               Style = SKPaintStyle.Fill,
                                               SKFontStyle = new SKFontStyle(SKFontStyleWeight.SemiBold,SKFontStyleWidth.Normal,SKFontStyleSlant.Upright),
                                               
-                                          },
+                                          },*/
                           SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
                       }
               };
@@ -105,7 +106,13 @@ public class ScannedFileChartViewModel
                           TextSize = 16,
                           MinStep = 100,
                           ForceStepToMin = false,
-                         
+                          LabelsPaint = new SolidColorPaint(SKColors.White)
+                                            {
+                                                StrokeThickness = 0,
+                                                Style = SKPaintStyle.Fill,
+                                                SKFontStyle = new SKFontStyle(SKFontStyleWeight.SemiBold,SKFontStyleWidth.Normal,SKFontStyleSlant.Upright),
+
+                                            },
                           MinLimit = 0,
                           CustomSeparators = Enumerable.Range(0, 2000).Select(i => (double)i * 500).Concat(Enumerable.Range(0, 2000).Select(i => (double)i * 250).ToArray()),
                           

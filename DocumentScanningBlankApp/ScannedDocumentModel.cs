@@ -12,16 +12,18 @@ public class ScannedDocumentModel
 {
     public ScannedDocumentModel(FileInfo file, bool isParent)
     {
-        var document = new PdfDocument(new PdfReader(file.FullName));
-        FileName = file.Name;
-        FileSize = file.Length;
-        ScannedDate = file.CreationTime;
-        Children = new ObservableCollection<ScannedDocumentModel>();
-        IsParent = isParent;
-        FileDirectory = file.DirectoryName;
-        ExtensionlessFileName = Path.GetFileNameWithoutExtension(file.FullName);
-        PageCount = document.GetNumberOfPages();
-        FullPath = file.FullName;
+        using (var document = new PdfDocument(new PdfReader(file.FullName)))
+        {
+            FileName = file.Name;
+            FileSize = file.Length;
+            ScannedDate = file.CreationTime;
+            Children = new ObservableCollection<ScannedDocumentModel>();
+            IsParent = isParent;
+            FileDirectory = file.DirectoryName;
+            ExtensionlessFileName = Path.GetFileNameWithoutExtension(file.FullName);
+            PageCount = document.GetNumberOfPages();
+            FullPath = file.FullName;
+        }
     }
     private int _pageCount;
     private double _fileSize;

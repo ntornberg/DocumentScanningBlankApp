@@ -10,8 +10,7 @@
     Background="{ThemeResource DarkBackgroundBrush}"
     Foreground="{ThemeResource TextBrush}">
     <Page.Resources>
-        <AcrylicBrush x:Key="CustomAcrylicInAppLuminosity"
-                      TintOpacity=".5" TintLuminosityOpacity="1" TintColor="{ThemeResource DarkPrimary}" FallbackColor="SkyBlue" />
+       
         <DataTemplate x:Key="ParentTemplate" x:DataType="local:ScannedDocumentModel">
            
 
@@ -23,9 +22,9 @@
                         </StackPanel>
                     </Button>
 
-                    <TextBlock Width="100" TextWrapping="Wrap" Padding="0" Text="{Binding FileName}" />
+                    <TextBox VerticalContentAlignment="Center" MaxHeight="4" Margin="0,4,0,0"  FontSize="14" Style="{ThemeResource BodyStrongTextBlockStyle}" BorderThickness="0" Background="Transparent"  Width="200" TextWrapping="Wrap" Padding="0" Text="{Binding FileName}" LostFocus="UIElement_OnLostFocus" TextChanged="FileName_OnTextChanged" BeforeTextChanging="FileParentName_OnBeforeTextChanging" GotFocus="FileName_OnGotFocus" />
                     <TextBlock Width="100" Padding="0" Text="{Binding FileSize}" />
-                    <TextBlock Width="100" Padding="0" Text="{Binding ScannedDate}" />
+                    <TextBlock Width="200" Padding="0" Text="{Binding ScannedDate}" />
                 </StackPanel>
             </TreeViewItem>
         </DataTemplate>
@@ -33,12 +32,12 @@
         <DataTemplate x:Key="ChildTemplate" x:DataType="local:ScannedDocumentModel" >
 
 
-            <TreeViewItem VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
+            <TreeViewItem Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15" >
 
                     <StackPanel Orientation="Horizontal" Spacing="5">
-                            
-                            <TextBlock Width="200" Padding="0" Text="{Binding FileName}" />
-                            <TextBlock Width="200" Padding="0" Text="{Binding FileSize}" />
+
+                    <TextBlock  Width="200" Padding="0" Text="{Binding FileName}"/>
+                        <TextBlock Width="200" Padding="0" Text="{Binding FileSize}" />
                             <TextBlock Width="200" Padding="0" Text="{Binding ScannedDate}" />
 
                         </StackPanel>
