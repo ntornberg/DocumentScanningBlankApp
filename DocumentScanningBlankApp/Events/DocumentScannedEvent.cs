@@ -6,7 +6,7 @@ using System.IO;
 
 public class DocumentScannedEvent
 {
-    private static FileSystemWatcher watcher;
+    private static FileSystemWatcher watcher;   
 
     private static string filePath =
         (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["OutputDirectory"] is not null
