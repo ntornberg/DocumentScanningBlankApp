@@ -43,6 +43,12 @@ namespace DocumentScanningBlankApp
         private static bool _isFileNameChanged { get; set; }
 
         private static string _previousFileName { get; set; }
+        
+        private static string _deletedFilePAth =
+            (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"] is not null
+                ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"]
+                : @"M:\Deleted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name\DeletedFiles
+
 
         public FileProcessingPage()
         {
@@ -88,14 +94,19 @@ namespace DocumentScanningBlankApp
 
             if (!await this.PromptKeepFileAsync(file).ConfigureAwait(true))
             {
+                File.Move(file.FullName,$"{_deletedFilePAth}\\{file.Name}");
                 return; // TODO: move file to delete folder. I should really make an abstraction for this 
             }
 
+            using (var document = new PdfDocument(new PdfReader(file.FullName)))
+            {
+                AppSettings.todaysPageCount += document.GetNumberOfPages();
+            }
             if (await this.PromptIsNewDocumentAsync().ConfigureAwait(true))
             {
                 try
                 {
-                    var userInput = await this.PromptUserInputAsync().ConfigureAwait(true);
+                    var userInput = await this.PromptUserInputAsync(file).ConfigureAwait(true);
                     _childCount = 0;
                     _parentFileName = userInput;
                     var newPathName = Path.Combine(Path.GetDirectoryName(file.FullName), _parentFileName + ".pdf");
@@ -252,7 +263,7 @@ namespace DocumentScanningBlankApp
             return await taskCompletionSource.Task;
         }
 
-        private async Task<string> PromptUserInputAsync()
+        private async Task<string> PromptUserInputAsync(FileInfo file)
         {
             var taskCompletionSource = new TaskCompletionSource<string>();
 
@@ -276,7 +287,7 @@ namespace DocumentScanningBlankApp
                         }
                         else if (result == ContentDialogResult.Secondary)
                         {
-                            //TODO: name file later
+                            taskCompletionSource.SetResult(Path.GetFileNameWithoutExtension(file.FullName));
                         }
                     });
             return await taskCompletionSource.Task;
@@ -307,7 +318,7 @@ namespace DocumentScanningBlankApp
                     }
                     else
                     {
-                        // TODO: Or else what nick?
+                        
                     }
                 });
         }

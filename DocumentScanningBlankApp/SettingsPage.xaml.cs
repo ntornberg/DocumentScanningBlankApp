@@ -65,6 +65,9 @@ public sealed partial class SettingsPage : Page
                 case "PickSortedFilesTextBlock":
                     this.ToggleSortedFilesPathTeachingTip.IsOpen = true;
                     break;
+                case "PickDeletedFilesTextBlock":
+                    this.ToggleDeletedFilesPathTeachingTip.IsOpen = true;
+                    break;
             }
 
         }
@@ -89,6 +92,9 @@ public sealed partial class SettingsPage : Page
                 break;
             case "PickSortedFilesPathButton":
                 this.PickSortedFilesPathTextBlock.Text = "";
+                break;
+            case "PickDeletedFilesPathButton":
+                this.PickDeletedFilesPathTextBlock.Text = "";
                 break;
         }
 
@@ -122,6 +128,9 @@ public sealed partial class SettingsPage : Page
             case "PickSortedFilesPathButton":
                 this.PickSortedFilesPathTextBlock.Text = folder.Path;
                 break;
+            case "PickDeletedFilesPathButton":
+                this.PickDeletedFilesPathTextBlock.Text = folder.Path;
+                break;
         }
     }
 
@@ -132,6 +141,17 @@ public sealed partial class SettingsPage : Page
         if (Directory.Exists(textBox.Text))
         {
             localSettings.Values["SortedFilesPath"] = textBox.Text;
+            GetHistoricalDataTask.FilePath = textBox.Text;
+        }
+    }
+
+    private void PickDeletedFilesPathButton_OnClickButton_Click(object sender, RoutedEventArgs e)
+    {
+        var textBox = (TextBox)sender;
+        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        if (Directory.Exists(textBox.Text))
+        {
+            localSettings.Values["DeletedFilesPath"] = textBox.Text;
             GetHistoricalDataTask.FilePath = textBox.Text;
         }
     }

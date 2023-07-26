@@ -3,6 +3,7 @@
 namespace DocumentScanningBlankApp.Events;
 
 using DocumentScanningBlankApp.Data;
+using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,10 @@ public class GetHistoricalDataTask
     private static List<FileInfo> files = new();
 
     private static List<(string date, double fileSize)> fileData = new();
-    private static string filePath = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] is not null ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] : @"M:\Sorted"; //TODO: Write this better man
+    private static string filePath =
+        (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] is not null
+            ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"]
+            : @"M:\Sorted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Sorted
 
     public static string FilePath
     {
@@ -33,6 +37,8 @@ public class GetHistoricalDataTask
     private static void GetHistoricalData()
     {
         files.Clear();
+        fileData.Clear();
+        AppSettings.totalPageCount = 0;
         var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
 
@@ -44,16 +50,21 @@ public class GetHistoricalDataTask
             var fileSize = fileItem.Length / (1000000.0);
             fileData.Add((date, fileSize));
         }
-
+        
         AddHistoricalData();
     }
 
     private static void SearchDirs(DirectoryInfo root)
     {
+        
         foreach (var file in root.GetFiles())
         {
 
             files.Add(file);
+            using (var document = new PdfDocument(new PdfReader(file.FullName)))
+            {
+                AppSettings.totalPageCount += document.GetNumberOfPages();
+            }
         }
 
         // Recursively print files from all subdirectories

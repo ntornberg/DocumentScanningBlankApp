@@ -21,6 +21,7 @@ public class ScannedFileChartViewModel
 {
     public ISeries[] Series { get; set; }
 
+    
     public ScannedFileChartViewModel()
     {
         var columnSeries = new ColumnSeries<double>
@@ -38,7 +39,7 @@ public class ScannedFileChartViewModel
 
     private static void OnPointMeasured(ChartPoint<double, RoundedRectangleGeometry, LabelGeometry> point)
     {
-        var perPointDelay = 100; // milliseconds
+        var perPointDelay = 100; 
         var delay = point.Context.Index * perPointDelay;
         var speed = (float)point.Context.Chart.AnimationsSpeed.TotalMilliseconds + delay;
 

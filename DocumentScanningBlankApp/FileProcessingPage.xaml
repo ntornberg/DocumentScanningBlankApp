@@ -17,7 +17,7 @@
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                FontSize="15"
+                FontSize="20"
                 ItemsSource="{x:Bind Children}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button
@@ -39,13 +39,14 @@
                     <TextBox
                         Width="200"
                         MaxHeight="4"
+
                         Margin="0,4,0,0"
                         Padding="0"
                         VerticalContentAlignment="Center"
                         Background="Transparent"
                         BeforeTextChanging="FileParentName_OnBeforeTextChanging"
                         BorderThickness="0"
-                        FontSize="14"
+                        FontSize="20"
                         GotFocus="FileName_OnGotFocus"
                         LostFocus="UIElement_OnLostFocus"
                         Text="{Binding FileName}"
@@ -53,10 +54,12 @@
                         TextWrapping="Wrap" />
                     <TextBlock
                         Width="100"
+                        Margin="0,4,0,0"
                         Padding="0"
                         Text="{Binding FileSize}" />
                     <TextBlock
                         Width="200"
+                        Margin="0,4,0,0"
                         Padding="0"
                         Text="{Binding ScannedDate}" />
                 </StackPanel>
@@ -111,11 +114,10 @@
         </Grid.Background>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="3" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <StackPanel
             Grid.Row="0"
             Margin="10"
@@ -123,19 +125,21 @@
             Orientation="Horizontal">
             <TextBlock
                 Width="150"
-                Margin="20,0,0,0"
+                Margin="105,0,0,0"
                 FontWeight="SemiBold"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="File Name" />
 
             <TextBlock
                 Width="150"
+                Margin="30,0,0,0"
                 FontWeight="SemiBold"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="File Size" />
+                Text="File Size (MB)" />
             <TextBlock
                 Width="150"
                 FontWeight="SemiBold"
+                Margin="30,0,0,0"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="Scanned Date" />
         </StackPanel>

@@ -2,58 +2,122 @@
     x:Class="DocumentScanningBlankApp.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DocumentScanningBlankApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DocumentScanningBlankApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
 
     <Grid Padding="12">
         <StackPanel>
-            <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,12" />
+            <TextBlock
+                Margin="0,0,0,12"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Text="Settings" />
             <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                <TextBox x:Name="PickScannedOutputTextBlock" Header="Scanned documents output directory:" PlaceholderText="Directory path" Width="500" HorizontalAlignment="Left"  Margin="0,0,0,20" LostFocus="DirectoryInput_OnLostFocus" TextChanged="OutputDirectory_OnTextChanged"/>
-                <Button x:Name="PickScannedOutputButton" Content="Open in folder"
-                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
-                
-                <TeachingTip x:Name="ToggleScannedOutputTeachingTip"
-                             Target="{x:Bind PickScannedOutputTextBlock}"
-                             Title="Invalid Folder Path"
-                             Subtitle="Ensure this path points to an existing folder.">
-                    <TeachingTip.IconSource>
-                        <SymbolIconSource Symbol="Refresh" />
-                    </TeachingTip.IconSource>
-                </TeachingTip>
-            </StackPanel>
-            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                <TextBox x:Name="PickMergeOutputTextBlock" Header="Merged files output directory:" PlaceholderText="Directory path" Width="500" Margin="0,0,0,20" HorizontalAlignment="Left" TextChanged="MergedDirectory_OnTextChanged" LostFocus="DirectoryInput_OnLostFocus"/>
-                <Button x:Name="PickMergeOutputButton" Content="Open in folder"
-                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
+                <TextBox
+                    x:Name="PickScannedOutputTextBlock"
+                    Width="500"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Header="Scanned documents output directory:"
+                    LostFocus="DirectoryInput_OnLostFocus"
+                    PlaceholderText="Directory path"
+                    TextChanged="OutputDirectory_OnTextChanged" />
+                <Button
+                    x:Name="PickScannedOutputButton"
+                    Margin="6,6,0,0"
+                    Click="PickFolderButton_Click"
+                    Content="Open in folder" />
 
-                <TeachingTip x:Name="ToggleMergeOutputTeachingTip"
-                             Target="{x:Bind PickMergeOutputTextBlock}"
-                             Title="Invalid Folder Path"
-                             Subtitle="Ensure this path points to an existing folder.">
+                <TeachingTip
+                    x:Name="ToggleScannedOutputTeachingTip"
+                    Title="Invalid Folder Path"
+                    Subtitle="Ensure this path points to an existing folder."
+                    Target="{x:Bind PickScannedOutputTextBlock}">
                     <TeachingTip.IconSource>
                         <SymbolIconSource Symbol="Refresh" />
                     </TeachingTip.IconSource>
                 </TeachingTip>
             </StackPanel>
             <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                <TextBox x:Name="PickSortedFilesPathTextBlock" Header="Sorted files output directory:" PlaceholderText="Directory path" Width="500" Margin="0,0,0,20" HorizontalAlignment="Left" TextChanged="PickSortedFilesPathTextBlock_OnTextChanged" LostFocus="DirectoryInput_OnLostFocus"/>
-                <Button x:Name="PickSortedFilesPathButton" Content="Open in folder"
-                        Click="PickFolderButton_Click" Margin="6,6,0,0"/>
+                <TextBox
+                    x:Name="PickMergeOutputTextBlock"
+                    Width="500"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Header="Merged files output directory:"
+                    LostFocus="DirectoryInput_OnLostFocus"
+                    PlaceholderText="Directory path"
+                    TextChanged="MergedDirectory_OnTextChanged" />
+                <Button
+                    x:Name="PickMergeOutputButton"
+                    Margin="6,6,0,0"
+                    Click="PickFolderButton_Click"
+                    Content="Open in folder" />
 
-                <TeachingTip x:Name="ToggleSortedFilesPathTeachingTip"
-                             Target="{x:Bind PickMergeOutputTextBlock}"
-                             Title="Invalid Folder Path"
-                             Subtitle="Ensure this path points to an existing folder.">
+                <TeachingTip
+                    x:Name="ToggleMergeOutputTeachingTip"
+                    Title="Invalid Folder Path"
+                    Subtitle="Ensure this path points to an existing folder."
+                    Target="{x:Bind PickMergeOutputTextBlock}">
                     <TeachingTip.IconSource>
                         <SymbolIconSource Symbol="Refresh" />
                     </TeachingTip.IconSource>
                 </TeachingTip>
             </StackPanel>
-            <!-- Add more settings as needed -->
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBox
+                    x:Name="PickSortedFilesPathTextBlock"
+                    Width="500"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Header="Sorted files output directory:"
+                    LostFocus="DirectoryInput_OnLostFocus"
+                    PlaceholderText="Directory path"
+                    TextChanged="PickSortedFilesPathTextBlock_OnTextChanged" />
+                <Button
+                    x:Name="PickSortedFilesPathButton"
+                    Margin="6,6,0,0"
+                    Click="PickFolderButton_Click"
+                    Content="Open in folder" />
+
+                <TeachingTip
+                    x:Name="ToggleSortedFilesPathTeachingTip"
+                    Title="Invalid Folder Path"
+                    Subtitle="Ensure this path points to an existing folder."
+                    Target="{x:Bind PickMergeOutputTextBlock}">
+                    <TeachingTip.IconSource>
+                        <SymbolIconSource Symbol="Refresh" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBox
+                    x:Name="PickDeletedFilesPathTextBlock"
+                    Width="500"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Left"
+                    Header="Sorted files output directory:"
+                    LostFocus="DirectoryInput_OnLostFocus"
+                    PlaceholderText="Directory path"
+                    TextChanged="PickSortedFilesPathTextBlock_OnTextChanged" />
+                <Button
+                    x:Name="PickDeletedFilesPathButton"
+                    Margin="6,6,0,0"
+                    Click="PickDeletedFilesPathButton_OnClickButton_Click"
+                    Content="Open in folder" />
+
+                <TeachingTip
+                    x:Name="ToggleDeletedFilesPathTeachingTip"
+                    Title="Invalid Folder Path"
+                    Subtitle="Ensure this path points to an existing folder."
+                    Target="{x:Bind PickDeletedFilesPathTextBlock}">
+                    <TeachingTip.IconSource>
+                        <SymbolIconSource Symbol="Refresh" />
+                    </TeachingTip.IconSource>
+                </TeachingTip>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

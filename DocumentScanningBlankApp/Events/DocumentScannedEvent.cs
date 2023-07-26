@@ -8,7 +8,10 @@ public class DocumentScannedEvent
 {
     private static FileSystemWatcher watcher;
 
-    private static string filePath = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["OutputDirectory"] is not null ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["OutputDirectory"] : @"M:\Scanned\East";
+    private static string filePath =
+        (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["OutputDirectory"] is not null
+            ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["OutputDirectory"]
+            : @"M:\Scanned\East"; //TODO: rename to  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East
 
     public static string FilePath
     {

@@ -8,7 +8,10 @@ using PdfDocument = iText.Kernel.Pdf.PdfDocument;
 
 public class MergeFilesTask
 {
-    public static string FilePath { get; set; } = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["MergedDirectory"] is not null ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["MergedDirectory"] : @"M:\Scanned\MergedFiles";
+    public static string FilePath { get; set; } =
+        (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["MergedDirectory"] is not null
+            ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["MergedDirectory"]
+            : @"M:\Scanned\MergedFiles"; //TODO: Change this back to right path  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\Merged
 
     public static void MergeFiles(ScannedDocumentModel file)
     {
