@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 using DocumentScanningBlankApp.Data;
 
-using iText.Layout.Element;
-
 public class GetHistoricalDataTask
 {
     private static List<FileInfo> files = new();
@@ -21,7 +19,7 @@ public class GetHistoricalDataTask
         var path = settings.Values["SortedFilesPath"] as string;
         if (path == null)
         {
-            path = @"C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Sorted";
+            path = @"M:\Sorted";
         }
 
         SearchDirs(new DirectoryInfo(path));

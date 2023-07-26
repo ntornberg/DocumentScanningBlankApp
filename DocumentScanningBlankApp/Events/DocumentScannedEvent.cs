@@ -12,8 +12,8 @@ public class DocumentScannedEvent
     {
         watcher = new FileSystemWatcher();
         watcher.IncludeSubdirectories = true;
-        watcher.NotifyFilter = NotifyFilters.FileName;
-        watcher.Path = @"C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name";
+        watcher.NotifyFilter = NotifyFilters.FileName; 
+        watcher.Path = @"M:\Scanned\East";
         watcher.Created += OnFileCreated;
         watcher.Changed += OnFileCreated;
         watcher.EnableRaisingEvents = true;

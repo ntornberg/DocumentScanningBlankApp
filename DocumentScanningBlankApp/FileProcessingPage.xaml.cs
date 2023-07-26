@@ -22,9 +22,9 @@ namespace DocumentScanningBlankApp
     using Microsoft.UI.Xaml.Navigation;
     using System.Collections.Specialized;
     using System.Diagnostics;
-    using System.Drawing;
+
     using PdfImageViewer = Windows.Data.Pdf;
-    using System.Drawing.Imaging;
+
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -39,8 +39,6 @@ namespace DocumentScanningBlankApp
     using Windows.Graphics.Imaging;
 
     using ABI.Microsoft.UI.Text;
-
-    using Org.BouncyCastle.Asn1.Crmf;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -303,7 +301,6 @@ namespace DocumentScanningBlankApp
                     };
 
                     var result = await mergeFileDialog.ShowAsync();
-
                     
                     if (result == ContentDialogResult.Primary)
                     {
