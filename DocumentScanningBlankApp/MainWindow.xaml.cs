@@ -40,6 +40,7 @@ namespace DocumentScanningBlankApp
                             {
                                 this.FileScannedNotification.Value = 1;
                             }
+
                             this.FileScannedNotification.Value++;
                             this.FileScannedNotification.Visibility = Visibility.Visible;
                         }

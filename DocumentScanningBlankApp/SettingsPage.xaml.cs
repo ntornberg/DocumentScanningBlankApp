@@ -5,6 +5,7 @@
 
 namespace DocumentScanningBlankApp;
 
+using DocumentScanningBlankApp.Events;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -13,8 +14,6 @@ using System.IO;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-
-using DocumentScanningBlankApp.Events;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
@@ -32,7 +31,7 @@ public sealed partial class SettingsPage : Page
         if (Directory.Exists(textBox.Text))
         {
             localSettings.Values["MergedDirectory"] = textBox.Text;
-        } 
+        }
     }
 
 
@@ -71,7 +70,7 @@ public sealed partial class SettingsPage : Page
         }
         else
         {
-               
+
             textBox.ClearValue(TextBox.BorderBrushProperty);
         }
     }

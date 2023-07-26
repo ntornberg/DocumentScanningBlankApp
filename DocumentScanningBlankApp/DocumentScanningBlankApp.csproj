@@ -25,8 +25,6 @@
     <Content Remove="Assets\6795910_document_file_merge_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="BlankWindow1.xaml" />
-    <None Remove="BlankWindow2.xaml" />
     <None Remove="FileDataPage.xaml" />
     <None Remove="FileProcessingPage.xaml" />
     <None Remove="SettingsPage.xaml" />
@@ -42,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="itext7" Version="8.0.0" />
     <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WinUI" Version="2.0.0-beta.860" />
@@ -65,20 +64,12 @@
     <Page Update="FileDataPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="BlankWindow2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="FileProcessingPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="BlankWindow1.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

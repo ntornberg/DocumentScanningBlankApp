@@ -10,35 +10,23 @@ using System.Threading.Tasks;
 
 namespace DocumentScanningBlankApp
 {
-    using System.Collections;
-    using System.Collections.Generic;
-
     using DocumentScanningBlankApp.Data;
     using DocumentScanningBlankApp.Events;
     using DocumentScanningBlankApp.StupidHacks;
     using iText.Kernel.Pdf;
     using Microsoft.UI.Dispatching;
     using Microsoft.UI.Xaml;
-    using Microsoft.UI.Xaml.Navigation;
+    using Microsoft.UI.Xaml.Media;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
-
-    using PdfImageViewer = Windows.Data.Pdf;
-
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    using Windows.Storage;
-
-    using ABI.Microsoft.UI.Xaml.Media.Imaging;
-
-    using Microsoft.UI.Xaml.Media;
-
-    using Image = Microsoft.UI.Xaml.Controls.Image;
-    using Windows.Storage.Streams;
     using Windows.Graphics.Imaging;
-
-    using ABI.Microsoft.UI.Text;
+    using Windows.Storage;
+    using Windows.Storage.Streams;
+    using Image = Microsoft.UI.Xaml.Controls.Image;
+    using PdfImageViewer = Windows.Data.Pdf;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -79,14 +67,14 @@ namespace DocumentScanningBlankApp
                 });
         }
 
-    
+
 
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
 
             var scannedFiles = new AddOnlyObservableCollection<FileInfo>(ScannedFileData.IncomingFiles);
             ScannedFileData.IncomingFiles.Clear();
-            
+
 
             foreach (var file in scannedFiles)
             {
@@ -135,7 +123,7 @@ namespace DocumentScanningBlankApp
                         Path.GetDirectoryName(file.FullName),
                         _parentFileName + $" (pt {_childCount}).pdf");
                     File.Move(file.FullName, newFileName);
-                    
+
                     DispatcherQueue.TryEnqueue(
                         async () =>
                             {
@@ -145,11 +133,11 @@ namespace DocumentScanningBlankApp
                             });
                 }
                 catch (Exception e)
-                { 
+                {
                     throw new Exception("Error placing file", e);
                     Debug.Fail("Error placing file");
                 }
-               
+
 
 
                 _childCount++;
@@ -285,7 +273,8 @@ namespace DocumentScanningBlankApp
                         {
                             var textBox = dialog.Content as TextBox;
                             taskCompletionSource.SetResult(textBox?.Text);
-                        }else if (result == ContentDialogResult.Secondary)
+                        }
+                        else if (result == ContentDialogResult.Secondary)
                         {
                             //TODO: name file later
                         }
@@ -298,7 +287,7 @@ namespace DocumentScanningBlankApp
             var button = sender as Button;
             var panel = button?.Parent as StackPanel;
             var dataContext = panel.DataContext as ScannedDocumentModel;
-            
+
             DispatcherQueue.TryEnqueue(async () =>
                 {
                     ContentDialog mergeFileDialog = new ContentDialog
@@ -311,14 +300,14 @@ namespace DocumentScanningBlankApp
                     };
 
                     var result = await mergeFileDialog.ShowAsync();
-                    
+
                     if (result == ContentDialogResult.Primary)
                     {
                         MergeFilesTask.MergeFiles(_rootNodes.First(c => c.FileName.Equals(dataContext.FileName)));
                     }
                     else
                     {
-                       // TODO: Or else what nick?
+                        // TODO: Or else what nick?
                     }
                 });
         }
@@ -330,8 +319,8 @@ namespace DocumentScanningBlankApp
 
         private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            
-                var textBox = sender as TextBox;
+
+            var textBox = sender as TextBox;
             if (textBox is null || textBox.Text.Equals(_previousFileName))
             {
                 return;
@@ -345,16 +334,16 @@ namespace DocumentScanningBlankApp
                 Path.GetDirectoryName(newNode.FullPath),
                 textBox.Text);
             File.Move(newNode.FullPath, newFileName);
-            
+
             newNode = new ScannedDocumentModel(new FileInfo(newFileName), true);
             ICollection<ScannedDocumentModel> children = new List<ScannedDocumentModel>();
-         
+
             foreach (var child in newChildren)
             {
                 var match = Regex.Match(child.FileName, @"\(\w+\s\d+\)\.pdf");
                 var newChildName = Path.Combine(
                     Path.GetDirectoryName(child.FullPath),
-                    textBox.Text.Replace(".pdf", "") +" "+ match.Value);
+                    textBox.Text.Replace(".pdf", "") + " " + match.Value);
                 File.Move(child.FullPath, newChildName);
                 children.Add(new ScannedDocumentModel(new FileInfo(newChildName), false));
 
@@ -373,7 +362,7 @@ namespace DocumentScanningBlankApp
         private void FileParentName_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
         {
             args.Cancel = !args.NewText.EndsWith(".pdf");
-            
+
         }
 
         private void FileName_OnGotFocus(object sender, RoutedEventArgs e)

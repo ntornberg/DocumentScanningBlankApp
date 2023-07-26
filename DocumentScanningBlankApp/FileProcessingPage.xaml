@@ -1,91 +1,91 @@
 ﻿<Page
-    Background="{ThemeResource DarkBackgroundBrush}"
-    Foreground="{ThemeResource TextBrush}"
-    mc:Ignorable="d"
     x:Class="DocumentScanningBlankApp.FileProcessingPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:DocumentScanningBlankApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    Background="{ThemeResource DarkBackgroundBrush}"
+    Foreground="{ThemeResource TextBrush}"
+    mc:Ignorable="d">
     <Page.Resources>
 
-        <DataTemplate x:DataType="local:ScannedDocumentModel" x:Key="ParentTemplate">
+        <DataTemplate x:Key="ParentTemplate" x:DataType="local:ScannedDocumentModel">
 
 
             <TreeViewItem
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
                 FontSize="15"
-                ItemsSource="{x:Bind Children}"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center">
+                ItemsSource="{x:Bind Children}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button
+                        VerticalContentAlignment="Center"
                         Background="Transparent"
                         BorderBrush="Transparent"
                         BorderThickness="0"
-                        Click="MergeButton_OnClick"
-                        VerticalContentAlignment="Center">
+                        Click="MergeButton_OnClick">
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                             <Image
+                                Width="30"
                                 Height="30"
                                 Margin="0,0,0,0"
                                 Source="Assets/6795910_document_file_merge_icon.png"
-                                Stretch="UniformToFill"
-                                Width="30" />
+                                Stretch="UniformToFill" />
                         </StackPanel>
                     </Button>
 
                     <TextBox
+                        Width="200"
+                        MaxHeight="4"
+                        Margin="0,4,0,0"
+                        Padding="0"
+                        VerticalContentAlignment="Center"
                         Background="Transparent"
                         BeforeTextChanging="FileParentName_OnBeforeTextChanging"
                         BorderThickness="0"
                         FontSize="14"
                         GotFocus="FileName_OnGotFocus"
                         LostFocus="UIElement_OnLostFocus"
-                        Margin="0,4,0,0"
-                        MaxHeight="4"
-                        Padding="0"
                         Text="{Binding FileName}"
                         TextChanged="FileName_OnTextChanged"
-                        TextWrapping="Wrap"
-                        VerticalContentAlignment="Center"
-                        Width="200" />
+                        TextWrapping="Wrap" />
                     <TextBlock
+                        Width="100"
                         Padding="0"
-                        Text="{Binding FileSize}"
-                        Width="100" />
+                        Text="{Binding FileSize}" />
                     <TextBlock
+                        Width="200"
                         Padding="0"
-                        Text="{Binding ScannedDate}"
-                        Width="200" />
+                        Text="{Binding ScannedDate}" />
                 </StackPanel>
             </TreeViewItem>
         </DataTemplate>
 
-        <DataTemplate x:DataType="local:ScannedDocumentModel" x:Key="ChildTemplate">
+        <DataTemplate x:Key="ChildTemplate" x:DataType="local:ScannedDocumentModel">
 
 
             <TreeViewItem
-                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                FontSize="15"
                 VerticalAlignment="Center"
-                VerticalContentAlignment="Center">
+                VerticalContentAlignment="Center"
+                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                FontSize="15">
 
                 <StackPanel Orientation="Horizontal" Spacing="5">
 
                     <TextBlock
+                        Width="200"
                         Padding="0"
-                        Text="{Binding FileName}"
-                        Width="200" />
+                        Text="{Binding FileName}" />
                     <TextBlock
+                        Width="200"
                         Padding="0"
-                        Text="{Binding FileSize}"
-                        Width="200" />
+                        Text="{Binding FileSize}" />
                     <TextBlock
+                        Width="200"
                         Padding="0"
-                        Text="{Binding ScannedDate}"
-                        Width="200" />
+                        Text="{Binding ScannedDate}" />
 
                 </StackPanel>
 
@@ -95,9 +95,9 @@
         </DataTemplate>
 
         <local:ScannedDocumentTemplateSelector
+            x:Key="ScannedDocumentTemplateSelector"
             ChildTemplate="{StaticResource ChildTemplate}"
-            ParentTemplate="{StaticResource ParentTemplate}"
-            x:Key="ScannedDocumentTemplateSelector" />
+            ParentTemplate="{StaticResource ParentTemplate}" />
     </Page.Resources>
 
 
@@ -118,38 +118,38 @@
 
         <StackPanel
             Grid.Row="0"
-            HorizontalAlignment="Left"
             Margin="10"
+            HorizontalAlignment="Left"
             Orientation="Horizontal">
             <TextBlock
-                FontWeight="SemiBold"
+                Width="150"
                 Margin="20,0,0,0"
+                FontWeight="SemiBold"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="File Name"
-                Width="150" />
+                Text="File Name" />
 
             <TextBlock
+                Width="150"
                 FontWeight="SemiBold"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="File Size"
-                Width="150" />
+                Text="File Size" />
             <TextBlock
+                Width="150"
                 FontWeight="SemiBold"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="Scanned Date"
-                Width="150" />
+                Text="Scanned Date" />
         </StackPanel>
         <Rectangle
-            Fill="Black"
             Grid.Row="1"
-            Height="120" />
+            Height="120"
+            Fill="Black" />
         <TreeView
+            x:Name="treeView"
             Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            ItemTemplateSelector="{StaticResource ScannedDocumentTemplateSelector}"
             Margin="10,0,10,10"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            x:Name="treeView" />
+            ItemTemplateSelector="{StaticResource ScannedDocumentTemplateSelector}" />
 
     </Grid>
 

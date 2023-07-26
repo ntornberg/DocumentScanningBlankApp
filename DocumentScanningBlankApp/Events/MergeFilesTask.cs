@@ -1,6 +1,5 @@
 ﻿namespace DocumentScanningBlankApp.Events;
 
-using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using System.IO;
 using System.Linq;

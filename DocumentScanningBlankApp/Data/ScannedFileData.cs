@@ -1,8 +1,7 @@
 ﻿namespace DocumentScanningBlankApp.Data;
 
-using System.Collections.Generic;
-
 using DocumentScanningBlankApp.StupidHacks;
+using System.Collections.Generic;
 using System.IO;
 
 public class ScannedFileData

@@ -2,12 +2,10 @@
 
 namespace DocumentScanningBlankApp.Events;
 
+using DocumentScanningBlankApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using DocumentScanningBlankApp.Data;
-using iText.Commons.Utils;
 
 public class GetHistoricalDataTask
 {
@@ -36,7 +34,7 @@ public class GetHistoricalDataTask
     {
         files.Clear();
         var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        
+
 
         SearchDirs(new DirectoryInfo(filePath));
 
