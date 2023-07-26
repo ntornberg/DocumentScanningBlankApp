@@ -4,25 +4,41 @@ namespace DocumentScanningBlankApp.Events;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DocumentScanningBlankApp.Data;
+using iText.Commons.Utils;
 
 public class GetHistoricalDataTask
 {
     private static List<FileInfo> files = new();
 
     private static List<(string date, double fileSize)> fileData = new();
+    private static string filePath = (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] is not null ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] : @"M:\Sorted"; //TODO: Write this better man
+
+    public static string FilePath
+    {
+        get => filePath;
+        set
+        {
+            filePath = value;
+            GetHistoricalData();
+        }
+    }
 
     public GetHistoricalDataTask()
     {
-        var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        var path = settings.Values["SortedFilesPath"] as string;
-        if (path == null)
-        {
-            path = @"M:\Sorted";
-        }
+        GetHistoricalData();
 
-        SearchDirs(new DirectoryInfo(path));
+    }
+
+    private static void GetHistoricalData()
+    {
+        files.Clear();
+        var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        
+
+        SearchDirs(new DirectoryInfo(filePath));
 
         foreach (var fileItem in files)
         {
@@ -32,7 +48,6 @@ public class GetHistoricalDataTask
         }
 
         AddHistoricalData();
-
     }
 
     private static void SearchDirs(DirectoryInfo root)
@@ -64,5 +79,6 @@ public class GetHistoricalDataTask
             }
 
         }
+        ScannedFileData.PreviouslyScannedFiles = ScannedFileData.PreviouslyScannedFiles.OrderBy(x => DateTime.Parse(x.Key)).ToDictionary(x => x.Key, x => x.Value);
     }
 }

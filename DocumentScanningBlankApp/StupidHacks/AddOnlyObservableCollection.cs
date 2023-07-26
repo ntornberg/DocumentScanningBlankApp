@@ -6,7 +6,7 @@ namespace DocumentScanningBlankApp.StupidHacks;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-public class AddOnlyObservableCollection<T> : ObservableCollection<T>
+public class AddOnlyObservableCollection<T> : ObservableCollection<T> // FIXME: this has got to be the dumbest work around to a circular reference sir.
 {
 
     public override event NotifyCollectionChangedEventHandler CollectionChanged;

@@ -100,7 +100,7 @@ namespace DocumentScanningBlankApp
 
             if (!await this.PromptKeepFileAsync(file).ConfigureAwait(true))
             {
-                return;
+                return; // TODO: move file to delete folder. I should really make an abstraction for this 
             }
 
             if (await this.PromptIsNewDocumentAsync().ConfigureAwait(true))
@@ -142,7 +142,6 @@ namespace DocumentScanningBlankApp
                                 var child = new FileInfo(newFileName);
                                 _parentNode.FileSize += child.Length;
                                 _parentNode.Children.Add(new ScannedDocumentModel(child, false));
-                                //_rootNodes.First(node => node.FileName.Equals(_parentNode.FileName)).Children.Add(new ScannedDocumentModel(child, false));
                             });
                 }
                 catch (Exception e)
@@ -157,72 +156,83 @@ namespace DocumentScanningBlankApp
             }
         }
 
+        private async Task<ImageSource> RenderPdfPageAsync(string filePath, uint pageIndex)
+        {
+            var pdfFile = await StorageFile.GetFileFromPathAsync(filePath);
+            var pdfDocument = await PdfImageViewer.PdfDocument.LoadFromFileAsync(pdfFile);
+            var pdfPage = pdfDocument.GetPage(pageIndex);
+
+            using var stream = new InMemoryRandomAccessStream();
+            await pdfPage.RenderToStreamAsync(stream);
+
+            var decoder = await BitmapDecoder.CreateAsync(stream);
+            var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+            if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
+                softwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
+            {
+                softwareBitmap = SoftwareBitmap.Convert(
+                    softwareBitmap,
+                    BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Premultiplied);
+            }
+
+            var bitmapSource = new Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource();
+            await bitmapSource.SetBitmapAsync(softwareBitmap);
+
+            return bitmapSource;
+        }
+
+        private ContentDialog CreateContentDialog(FileInfo fileInfo, Image imageControl, int pageCount)
+        {
+            var messageText = new TextBlock
+            {
+                Text = $"A new file has been created. Do you want to keep it?\n\n"
+                     + $"File Size: {fileInfo.Length * 0.000001} MB\n"
+                     + $"Page Count: {pageCount}\n",
+            };
+
+            var stackPanel = new StackPanel();
+            stackPanel.Children.Add(messageText);
+            stackPanel.Children.Add(imageControl);
+
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = "File Action",
+                Content = stackPanel,
+                PrimaryButtonText = "Yes",
+                SecondaryButtonText = "No",
+            };
+
+            return dialog;
+        }
+
         private async Task<bool> PromptKeepFileAsync(FileInfo fileInfo)
         {
-
             var taskCompletionSource = new TaskCompletionSource<bool>();
 
-            DispatcherQueue.TryEnqueue(
-                    async () =>
-                        {
-                            Image imageControl = new Image();
-                            StorageFile pdfFile = await StorageFile.GetFileFromPathAsync(fileInfo.FullName);
-                            PdfImageViewer.PdfDocument pdfDocument = await PdfImageViewer.PdfDocument.LoadFromFileAsync(pdfFile);
-                            
-                            var pageIndex = 0;
-                            var pdfPage = pdfDocument.GetPage((uint)pageIndex);
+            DispatcherQueue.TryEnqueue(async () =>
+            {
+                var pageIndex = 0;
+                var imageControl = new Image
+                {
+                    Source = await RenderPdfPageAsync(fileInfo.FullName, (uint)pageIndex)
+                };
 
-                            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-                            {
-                                await pdfPage.RenderToStreamAsync(stream);
-                                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                                SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                                var bitmapSource = new Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource();
+                var documentData = new PdfDocument(new PdfReader(fileInfo.FullName));
+                var dialog = CreateContentDialog(fileInfo, imageControl, documentData.GetNumberOfPages());
 
-                                if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8
-                                    || softwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
-                                {
-                                    softwareBitmap = SoftwareBitmap.Convert(
-                                        softwareBitmap,
-                                        BitmapPixelFormat.Bgra8,
-                                        BitmapAlphaMode.Premultiplied);
-                                }
+                var results = await dialog.ShowAsync();
+                documentData.Close();
 
-                                await bitmapSource.SetBitmapAsync(softwareBitmap);
+                var result = results == ContentDialogResult.Primary;
+                taskCompletionSource.SetResult(result);
+            });
 
-                                imageControl.Source = bitmapSource;
-                            }
-
-                            var documentData = new PdfDocument(new PdfReader(fileInfo.FullName));
-                            var messageText = new TextBlock()
-                                                  {
-                                                      Text = $"A new file has been created. Do you want to keep it?\n\n"
-                                                             + $"File Size: {fileInfo.Length * 0.000001} MB\n"
-                                                             + $"Page Count: {documentData.GetNumberOfPages()}\n",
-                                                  };
-                            StackPanel stackPanel = new StackPanel();
-                            stackPanel.Children.Add(messageText);
-                            stackPanel.Children.Add(imageControl);
-                            
-                            var dialog = new ContentDialog();
-                            dialog.XamlRoot = XamlRoot;
-                            dialog.Title = "File Action";
-                            dialog.Content = stackPanel;
-                            dialog.PrimaryButtonText = "Yes";
-                            dialog.SecondaryButtonText = "No";
-                            
-
-                            var results = await dialog.ShowAsync();
-                            documentData.Close();
-                            
-                            var result = results == ContentDialogResult.Primary;
-                            taskCompletionSource.SetResult(result);
-                        });
-
-
-                return await taskCompletionSource.Task;
+            return await taskCompletionSource.Task;
         }
-        
+
 
 
 
@@ -304,11 +314,11 @@ namespace DocumentScanningBlankApp
                     
                     if (result == ContentDialogResult.Primary)
                     {
-                        MergeFilesTask.MergeFiles(_rootNodes.First(c => c.FileName.Equals(dataContext.FileName))); // TODO: It should merge targeted node
+                        MergeFilesTask.MergeFiles(_rootNodes.First(c => c.FileName.Equals(dataContext.FileName)));
                     }
                     else
                     {
-                       
+                       // TODO: Or else what nick?
                     }
                 });
         }

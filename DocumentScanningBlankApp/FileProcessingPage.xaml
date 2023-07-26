@@ -143,27 +143,6 @@
             Fill="Black"
             Grid.Row="1"
             Height="120" />
-        <!--<TreeView x:Name ="treeView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,10" Grid.Row="2" ItemTemplateSelector="{StaticResource NodeTemplateSelector}" >
-            <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="local:ScannedDocumentModel">
-                    <TreeViewItem ItemsSource="{x:Bind Children}" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <Button Click="MergeButton_OnClick" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalContentAlignment="Center">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Image Source="Assets/6795910_document_file_merge_icon.png" Stretch="UniformToFill"  Width="30" Height="30" Margin="0,0,0,0" />
-                                </StackPanel>
-                            </Button>
-
-                            <TextBlock Width="200" Padding="0" Text="{Binding FileName}" />
-                            <TextBlock Width="200" Padding="0" Text="{Binding FileSize}" />
-                            <TextBlock Width="200" Padding="0" Text="{Binding ScannedDate}" />
-
-                        </StackPanel>
-
-                    </TreeViewItem>
-                </DataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>-->
         <TreeView
             Grid.Row="2"
             HorizontalAlignment="Stretch"
