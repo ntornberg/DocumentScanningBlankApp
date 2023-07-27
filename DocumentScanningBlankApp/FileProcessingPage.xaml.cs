@@ -47,7 +47,7 @@ namespace DocumentScanningBlankApp
         private static string _deletedFilePAth =
             (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"] is not null
                 ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"]
-                : @"M:\Deleted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name\DeletedFiles
+                : @"M:\Scanned\Deleted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name\DeletedFiles
 
 
         public FileProcessingPage()
