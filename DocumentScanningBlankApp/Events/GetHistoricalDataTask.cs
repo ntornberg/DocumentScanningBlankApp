@@ -61,10 +61,8 @@ public class GetHistoricalDataTask
         {
 
             files.Add(file);
-            using (var document = new PdfDocument(new PdfReader(file.FullName)))
-            {
-                AppSettings.totalPageCount += document.GetNumberOfPages();
-            }
+            using var document = new PdfDocument(new PdfReader(file.FullName));
+            AppSettings.totalPageCount += document.GetNumberOfPages();
         }
 
         // Recursively print files from all subdirectories

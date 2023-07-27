@@ -5,7 +5,10 @@
 
 namespace DocumentScanningBlankApp
 {
+    using System;
+
     using DocumentScanningBlankApp.Events;
+    using Windows.ApplicationModel.Activation;
 
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -13,13 +16,11 @@ namespace DocumentScanningBlankApp
     public partial class App : Application
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class. 
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        private static DocumentScannedEvent _documentScannedEvent;
-        private static GetHistoricalDataTask _getPreviousFileData;
 
-        public static Window m_window;
 
         public App()
         {
@@ -27,15 +28,17 @@ namespace DocumentScanningBlankApp
             _documentScannedEvent = new DocumentScannedEvent();
             _getPreviousFileData = new GetHistoricalDataTask();
         }
-        /// <summary>
-        /// Invoked when the application is launched.
-        /// </summary>
-        /// <param name="args">Details about the launch request and process.</param>
+
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
             m_window.Activate();
 
         }
+        private static DocumentScannedEvent _documentScannedEvent;
+        private static GetHistoricalDataTask _getPreviousFileData;
+
+        public static Window m_window;
+       
     }
 }

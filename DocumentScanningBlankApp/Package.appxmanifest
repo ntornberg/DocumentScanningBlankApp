@@ -13,7 +13,7 @@
   <Identity
     Name="8435524c-4964-4f74-a64a-2bb61f0432b6"
     Publisher="CN=ntornberg"
-    Version="1.0.9.0" />
+    Version="1.0.10.0" />
 
   <mp:PhoneIdentity PhoneProductId="8435524c-4964-4f74-a64a-2bb61f0432b6" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
