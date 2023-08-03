@@ -21,15 +21,14 @@ namespace DocumentScanningBlankApp
         public int FileScannedNotificationCount { get; set; }
         public MainWindow()
         {
-
             this.InitializeComponent();
             this.NavMenu.ItemInvoked += NavMenu_ItemInvoked;
+            
             ScannedFileData.IncomingFiles.CollectionChanged += this.IncomingFiles_CollectionChanged;
         }
 
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-
             DispatcherQueue.TryEnqueue(
                 async () =>
                     {
@@ -41,7 +40,7 @@ namespace DocumentScanningBlankApp
                                 this.FileScannedNotification.Value = 1;
                             }
 
-                            this.FileScannedNotification.Value++;
+                            
                             this.FileScannedNotification.Visibility = Visibility.Visible;
                         }
                         else

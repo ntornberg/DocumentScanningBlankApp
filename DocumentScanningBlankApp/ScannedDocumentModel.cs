@@ -80,7 +80,6 @@ public class ScannedDocumentModel
     }
 
 
-
     public ICollection<ScannedDocumentModel> Children
     {
         get; set;

@@ -44,10 +44,10 @@ namespace DocumentScanningBlankApp
 
         private static string _previousFileName { get; set; }
         
-        private static string _deletedFilePAth =
+        private static string _deletedFilePath =
             (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"] is not null
                 ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["DeletedFilesPath"]
-                : @"M:\Deleted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name\DeletedFiles
+                : @"M:\Scanned\Deleted"; //TODO:  C:\Users\ntornberg\OneDrive - Metal Exchange Corporation\Documents\newdocs\Scanned\East\Need_To_Name\DeletedFiles
 
 
         public FileProcessingPage()
@@ -74,27 +74,22 @@ namespace DocumentScanningBlankApp
         }
 
 
-
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-
             var scannedFiles = new AddOnlyObservableCollection<FileInfo>(ScannedFileData.IncomingFiles);
             ScannedFileData.IncomingFiles.Clear();
-
-
+            
             foreach (var file in scannedFiles)
             {
-                this.OnFileCreated(file);
+                OnFileCreated(file);
             }
-
         }
 
         private async Task OnFileCreated(FileInfo file)
         {
-
-            if (!await this.PromptKeepFileAsync(file).ConfigureAwait(true))
+            if (!await PromptKeepFileAsync(file))
             {
-                File.Move(file.FullName,$"{_deletedFilePAth}\\{file.Name}");
+                File.Move(file.FullName,$"{_deletedFilePath}\\{file.Name}");
                 return; // TODO: move file to delete folder. I should really make an abstraction for this 
             }
 
@@ -102,84 +97,114 @@ namespace DocumentScanningBlankApp
             {
                 AppSettings.todaysPageCount += document.GetNumberOfPages();
             }
-            if (await this.PromptIsNewDocumentAsync().ConfigureAwait(true))
+            if (await this.PromptIsNewDocumentAsync())
             {
-                try
+                int maxPrompts = 5;
+                for (int attempt = 1; attempt <= maxPrompts; attempt++)
                 {
-                    var userInput = await this.PromptUserInputAsync(file).ConfigureAwait(true);
-                    _childCount = 0;
-                    _parentFileName = userInput;
-                    var newPathName = Path.Combine(Path.GetDirectoryName(file.FullName), _parentFileName + ".pdf");
-                    File.Move(file.FullName, newPathName);
-                    _parentNode = new ScannedDocumentModel(new FileInfo(newPathName), true);
-                    if (_rootNodes is null)
+                    try
                     {
-                        _rootNodes = new ObservableCollection<ScannedDocumentModel>();
-                    }
+                        var userInput = await this.PromptUserInputAsync(file);
+                        _childCount = 0;
+                        _parentFileName = userInput;
+                        var newPathName = Path.Combine(Path.GetDirectoryName(file.FullName), _parentFileName + ".pdf");
+                        File.Move(file.FullName, newPathName);
+                        _parentNode = new ScannedDocumentModel(new FileInfo(newPathName), true);
+                        if (_rootNodes is null)
+                        {
+                            _rootNodes = new ObservableCollection<ScannedDocumentModel>();
+                        }
 
-                    DispatcherQueue.TryEnqueue(async () => { _rootNodes.Add(_parentNode); });
-                    _childCount++;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Error placing file", e);
-                    Debug.Fail("Error placing file");
+                        DispatcherQueue.TryEnqueue(async () => { _rootNodes.Add(_parentNode); });
+                        _childCount++;
+                        break;
+                    }
+                    catch (IOException)
+                    {
+                        if (attempt == maxPrompts)
+                        {
+                            throw;
+                        }
+
+                        await Task.Delay(200);
+                    }
                 }
             }
             else
             {
-                try
-                { //TODO: make sure files aren't the same name make this more robust
-                    var newFileName = Path.Combine(
-                        Path.GetDirectoryName(file.FullName),
-                        _parentFileName + $" (pt {_childCount}).pdf");
-                    File.Move(file.FullName, newFileName);
-
-                    DispatcherQueue.TryEnqueue(
-                        async () =>
+                int maxAttempts = 5;
+                for (int attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    try
+                    {
+                        var newFileName = Path.Combine(
+                            Path.GetDirectoryName(file.FullName),
+                            _parentFileName + $" (pt {_childCount}).pdf");
+                        File.Move(file.FullName, newFileName);
+                        DispatcherQueue.TryEnqueue(
+                            async () =>
                             {
                                 var child = new FileInfo(newFileName);
                                 _parentNode.FileSize += child.Length;
                                 _parentNode.Children.Add(new ScannedDocumentModel(child, false));
+                                _childCount++;
                             });
+                        break;
+                    }
+                    catch (IOException)
+                    {
+                        if (attempt == maxAttempts)
+                        {
+                            throw; 
+                        }
+
+                        await Task.Delay(200);
+                    }
                 }
-                catch (Exception e)
-                {
-                    throw new Exception("Error placing file", e);
-                    Debug.Fail("Error placing file");
-                }
-
-
-
-                _childCount++;
             }
         }
 
         private async Task<ImageSource> RenderPdfPageAsync(string filePath, uint pageIndex)
         {
-            var pdfFile = await StorageFile.GetFileFromPathAsync(filePath);
-            var pdfDocument = await PdfImageViewer.PdfDocument.LoadFromFileAsync(pdfFile);
-            var pdfPage = pdfDocument.GetPage(pageIndex);
-
-            using var stream = new InMemoryRandomAccessStream();
-            await pdfPage.RenderToStreamAsync(stream);
-
-            var decoder = await BitmapDecoder.CreateAsync(stream);
-            var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-            if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
-                softwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
+            int maxAttempts = 5;
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
-                softwareBitmap = SoftwareBitmap.Convert(
-                    softwareBitmap,
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Premultiplied);
+                try
+                {
+                    var pdfFile = await StorageFile.GetFileFromPathAsync(filePath);
+                    var pdfDocument = await PdfImageViewer.PdfDocument.LoadFromFileAsync(pdfFile);
+                    var pdfPage = pdfDocument.GetPage(pageIndex);
+
+                    using var stream = new InMemoryRandomAccessStream();
+                    await pdfPage.RenderToStreamAsync(stream);
+
+                    var decoder = await BitmapDecoder.CreateAsync(stream);
+                    var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                    if (softwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
+                        softwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
+                    {
+                        softwareBitmap = SoftwareBitmap.Convert(
+                            softwareBitmap,
+                            BitmapPixelFormat.Bgra8,
+                            BitmapAlphaMode.Premultiplied);
+                    }
+
+                    var bitmapSource = new Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource();
+                    await bitmapSource.SetBitmapAsync(softwareBitmap);
+                    return bitmapSource;
+                }
+                catch (IOException)
+                {
+                    if (attempt == maxAttempts)
+                    {
+                        throw; // rethrow the last exception if all attempts failed
+                    }
+
+                    await Task.Delay(200); // wait 200ms before the next attempt
+                }
             }
-
-            var bitmapSource = new Microsoft.UI.Xaml.Media.Imaging.SoftwareBitmapSource();
-            await bitmapSource.SetBitmapAsync(softwareBitmap);
-
-            return bitmapSource;
+            throw new Exception("Error rendering pdf page");
         }
 
         private ContentDialog CreateContentDialog(FileInfo fileInfo, Image imageControl, int pageCount)
@@ -231,10 +256,6 @@ namespace DocumentScanningBlankApp
 
             return await taskCompletionSource.Task;
         }
-
-
-
-
 
 
         private async Task<bool> PromptIsNewDocumentAsync()

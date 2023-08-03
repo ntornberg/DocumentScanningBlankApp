@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace DocumentScanningBlankApp.Events;
 
@@ -13,6 +14,7 @@ public class GetHistoricalDataTask
     private static List<FileInfo> files = new();
 
     private static List<(string date, double fileSize)> fileData = new();
+
     private static string filePath =
         (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"] is not null
             ? (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values["SortedFilesPath"]
@@ -28,66 +30,52 @@ public class GetHistoricalDataTask
         }
     }
 
-    public GetHistoricalDataTask()
-    {
-        GetHistoricalData();
 
+    public async Task Run()
+    {
+        await GetHistoricalData();
     }
 
-    private static void GetHistoricalData()
+    private static async Task GetHistoricalData()
     {
-        files.Clear();
-        fileData.Clear();
+        ScannedFileData.PreviouslyScannedFiles.Clear();
         AppSettings.totalPageCount = 0;
-        var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-
-        SearchDirs(new DirectoryInfo(filePath));
-
-        foreach (var fileItem in files)
-        {
-            var date = fileItem.LastWriteTime.ToShortDateString();
-            var fileSize = fileItem.Length / (1000000.0);
-            fileData.Add((date, fileSize));
-        }
-        
-        AddHistoricalData();
+        await ProcessDirectory(new DirectoryInfo(filePath));
     }
 
-    private static void SearchDirs(DirectoryInfo root)
+    private static async Task ProcessDirectory(DirectoryInfo root)
     {
-        
-        foreach (var file in root.GetFiles())
+        Parallel.ForEach(root.GetFiles(), file => // Using parallel processing here
         {
+            var date = file.LastWriteTime.ToShortDateString();
+            var fileSize = file.Length / (1000000.0);
 
-            files.Add(file);
             using (var document = new PdfDocument(new PdfReader(file.FullName)))
             {
                 AppSettings.totalPageCount += document.GetNumberOfPages();
             }
-        }
 
-        // Recursively print files from all subdirectories
+            lock (ScannedFileData.PreviouslyScannedFiles) // Lock the shared resource
+            {
+                if (ScannedFileData.PreviouslyScannedFiles.ContainsKey(date))
+                {
+                    ScannedFileData.PreviouslyScannedFiles[date] += fileSize;
+                }
+                else
+                {
+                    ScannedFileData.PreviouslyScannedFiles[date] = fileSize;
+                }
+            }
+        });
+
+        // Recursively process all subdirectories
         foreach (var directory in root.GetDirectories())
         {
-            SearchDirs(directory);
+            ProcessDirectory(directory);
         }
-    }
 
-    private static void AddHistoricalData()
-    {
-        foreach (var file in fileData)
-        {
-            if (ScannedFileData.PreviouslyScannedFiles.ContainsKey(file.Item1))
-            {
-                ScannedFileData.PreviouslyScannedFiles[file.Item1] += file.Item2;
-            }
-            else
-            {
-                ScannedFileData.PreviouslyScannedFiles[file.Item1] = file.Item2;
-            }
-
-        }
+        // Order the dictionary once after processing
         ScannedFileData.PreviouslyScannedFiles = ScannedFileData.PreviouslyScannedFiles.OrderBy(x => DateTime.Parse(x.Key)).ToDictionary(x => x.Key, x => x.Value);
     }
+
 }
