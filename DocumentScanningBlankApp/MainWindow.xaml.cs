@@ -18,13 +18,14 @@ namespace DocumentScanningBlankApp
     public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
         public double InfoBadgeOpacity { get; set; }
-        public int FileScannedNotificationCount { get; set; }
+        public int FileScannedNotificationCount { get; set;}
         public MainWindow()
         {
             this.InitializeComponent();
             this.NavMenu.ItemInvoked += NavMenu_ItemInvoked;
             
             ScannedFileData.IncomingFiles.CollectionChanged += this.IncomingFiles_CollectionChanged;
+            this.contentFrame.Navigate(typeof(FileProcessingPage));
         }
 
         private void IncomingFiles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

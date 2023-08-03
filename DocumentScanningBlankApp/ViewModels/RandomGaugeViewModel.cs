@@ -16,9 +16,9 @@ public partial class RandomGaugeViewModel : ObservableObject
 {
    
         public Paint paint { get; set; } = new SolidColorPaint(SKColors.White);
-        
+    public IEnumerable<ISeries> Series { get; set; }
 
-        public static double itemWeight { get; set; } = 0;
+    public static double itemWeight { get; set; } = 0;
         public static string itemLabel
         {
             get => "Papers";
@@ -47,7 +47,7 @@ public partial class RandomGaugeViewModel : ObservableObject
 
         public ObservableValue PaperCount { get; set; }
        
-        public IEnumerable<ISeries> Series { get; set; }
+       
 
         [RelayCommand]
         public void DoRandomChange()

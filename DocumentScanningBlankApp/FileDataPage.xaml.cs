@@ -18,10 +18,14 @@ namespace DocumentScanningBlankApp
             this.InitializeComponent();
         }
 
-        private void Weight_OnLostFocus(object sender, RoutedEventArgs e)
+        private void Weight_OnLostFocus(object sender, RoutedEventArgs e) //weight watcher nice
         {
             var output = sender as TextBox;
-           RandomGaugeViewModel.itemWeight = double.Parse(output.Text);
+            double result;
+            if (output != null && double.TryParse(output.Text,out result))
+            {
+                RandomGaugeViewModel.itemWeight = double.Parse(output.Text);
+            }
         }
     }
 }
